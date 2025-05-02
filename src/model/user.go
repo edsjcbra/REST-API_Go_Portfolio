@@ -6,14 +6,14 @@ import (
 
 )
 
-type userDomain struct {
+type user struct {
 	email    string
 	password string
 	name     string
 	age      int8
 }
 
-type UserDomainInterface interface{
+type UserGetterInterface interface{
 	GetEmail() string
 	GetPassword() string
 	GetName() string
@@ -22,28 +22,28 @@ type UserDomainInterface interface{
 	EncryptPassword()
 }
 
-func NewUserDomain(email, password, name string, age int8) UserDomainInterface{
-	return &userDomain{
+func NewUser(email, password, name string, age int8) UserGetterInterface{
+	return &user{
 		email, password, name, age,
 	}
 }
 
-func (u *userDomain) EncryptPassword() {
+func (u *user) EncryptPassword() {
 	hash := md5.New()
 	defer hash.Reset()
 	hash.Write([]byte(u.password))
 	u.password = hex.EncodeToString(hash.Sum(nil))
 }
 
-func (u *userDomain) GetEmail() string{
+func (u *user) GetEmail() string{
 	return u.email
 }
-func (u *userDomain) GetPassword() string {
+func (u *user) GetPassword() string {
 	return u.password
 }
-func (u *userDomain) GetName() string {
+func (u *user) GetName() string {
 	return u.name
 }
-func (u *userDomain) GetAge() int8 {
+func (u *user) GetAge() int8 {
 	return u.age
 }

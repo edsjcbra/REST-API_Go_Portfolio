@@ -13,15 +13,15 @@ import (
 )
 
 var (
-	UserDomainInterface model.UserDomainInterface
+	UserDomainInterface model.UserGetterInterface
 )
 
 func CreateUser(c *gin.Context) {
 	logger.Info("Init CreateUser controller", zap.String("journey", "createUser"))
 
-	var userRequest request.UserRequest
+	var userFromRequest request.UserRequest
 
-	if err := c.ShouldBindJSON(&userRequest); err != nil {
+	if err := c.ShouldBindJSON(&userFromRequest); err != nil {
 		logger.Error("Error trying to validate user info", err, zap.String("journey", "createUser"))
 		errRest := validation.ValidateUserError(err)
 
@@ -29,11 +29,11 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	domain := model.NewUserDomain(userRequest.Email, userRequest.Password, userRequest.Name, userRequest.Age)
+	user := model.NewUser(userFromRequest.Email, userFromRequest.Password, userFromRequest.Name, userFromRequest.Age)
 
-	service := service.NewUserDomainService()
+	service := service.NewUserService()
 
-	if err := service.CreateUser(domain); err != nil {
+	if err := service.CreateUser(user); err != nil {
 		c.JSON(err.Code, err)
 	}
 

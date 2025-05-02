@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/edsjcbra/REST-API_Go_Portfolio/rest_err"
+	"github.com/edsjcbra/REST-API_Go_Portfolio/src/configuration/rest_err"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/en"
 	ut "github.com/go-playground/universal-translator"

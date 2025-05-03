@@ -7,16 +7,16 @@ import (
 	"github.com/edsjcbra/REST-API_Go_Portfolio/src/configuration/validation"
 	"github.com/edsjcbra/REST-API_Go_Portfolio/src/controller/model/request"
 	"github.com/edsjcbra/REST-API_Go_Portfolio/src/model"
-	"github.com/edsjcbra/REST-API_Go_Portfolio/src/model/service"
+	"github.com/edsjcbra/REST-API_Go_Portfolio/src/view"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
 
 var (
-	UserDomainInterface model.UserGetterInterface
+	UserDomainInterface model.UserGetter
 )
 
-func CreateUser(c *gin.Context) {
+func (uc *userController) CreateUser(c *gin.Context) {
 	logger.Info("Init CreateUser controller", zap.String("journey", "createUser"))
 
 	var userFromRequest request.UserRequest
@@ -31,13 +31,11 @@ func CreateUser(c *gin.Context) {
 
 	user := model.NewUser(userFromRequest.Email, userFromRequest.Password, userFromRequest.Name, userFromRequest.Age)
 
-	service := service.NewUserService()
-
-	if err := service.CreateUser(user); err != nil {
+	if err := uc.service.CreateUser(user); err != nil {
 		c.JSON(err.Code, err)
 	}
 
 	logger.Info("User created succesfully", zap.String("journey", "createUser"))
 
-	c.String(http.StatusCreated, "")
+	c.JSON(http.StatusCreated, view.ConvertUserToResponse(user))
 }

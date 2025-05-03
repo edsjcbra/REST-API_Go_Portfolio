@@ -13,7 +13,7 @@ type user struct {
 	age      int8
 }
 
-type UserGetterInterface interface{
+type UserGetter interface{
 	GetEmail() string
 	GetPassword() string
 	GetName() string
@@ -22,7 +22,7 @@ type UserGetterInterface interface{
 	EncryptPassword()
 }
 
-func NewUser(email, password, name string, age int8) UserGetterInterface{
+func NewUser(email, password, name string, age int8) UserGetter{
 	return &user{
 		email, password, name, age,
 	}

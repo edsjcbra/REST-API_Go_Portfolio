@@ -14,8 +14,8 @@ type userService struct{
 }
 
 type UserService interface {
-	CreateUser(model.UserGetterInterface) *rest_err.RestErr
-	UpdateUser(string, model.UserGetterInterface) *rest_err.RestErr
-	FindUser(string) (*model.UserGetterInterface, *rest_err.RestErr)
+	CreateUser(model.UserGetter) *rest_err.RestErr
+	UpdateUser(string, model.UserGetter) *rest_err.RestErr
+	FindUser(string) (*model.UserGetter, *rest_err.RestErr)
 	DeleteUser(string) *rest_err.RestErr
 }

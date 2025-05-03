@@ -7,7 +7,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func (u *userService) FindUser(string) (*model.UserGetterInterface, *rest_err.RestErr) {
+func (u *userService) FindUser(string) (*model.UserGetter, *rest_err.RestErr) {
 	logger.Info("Init updateUser model", zap.String("journey", "updateUser"))
 	return nil, nil
 }

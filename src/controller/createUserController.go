@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/edsjcbra/REST-API_Go_Portfolio/src/configuration/logger"
+	"github.com/edsjcbra/REST-API_Go_Portfolio/src/configuration/rest_err"
 	"github.com/edsjcbra/REST-API_Go_Portfolio/src/configuration/validation"
 	"github.com/edsjcbra/REST-API_Go_Portfolio/src/controller/model/request"
 	"github.com/edsjcbra/REST-API_Go_Portfolio/src/model"
@@ -29,13 +30,21 @@ func (uc *userController) CreateUser(c *gin.Context) {
 		return
 	}
 
-	user := model.NewUser(userFromRequest.Email, userFromRequest.Password, userFromRequest.Name, userFromRequest.Age)
+	domainUser := model.NewUser(userFromRequest.Email, userFromRequest.Password, userFromRequest.Name, userFromRequest.Age)
 
-	if err := uc.service.CreateUser(user); err != nil {
+	userResult, err := uc.service.CreateUser(domainUser)
+	if err != nil {
+		logger.Error("Error trying to create user", err, zap.String("journey", "createUser"))
 		c.JSON(err.Code, err)
+		return
 	}
 
-	logger.Info("User created succesfully", zap.String("journey", "createUser"))
+	// Aqui garantimos que userResult não está nil antes de acessar
+	if userResult == nil {
+		apiErr := rest_err.NewInternalServerError("Erro inesperado ao criar usuário")
+		c.JSON(apiErr.Code, apiErr)
+		return
+	}
 
-	c.JSON(http.StatusCreated, view.ConvertUserToResponse(user))
+	c.JSON(http.StatusCreated, view.ConvertUserToResponse(userResult))
 }

@@ -1,4 +1,4 @@
-package repository
+package repositories
 
 import (
 	"context"
@@ -7,17 +7,16 @@ import (
 
 	"github.com/edsjcbra/REST-API_Go_Portfolio/src/configuration/logger"
 	"github.com/edsjcbra/REST-API_Go_Portfolio/src/configuration/rest_err"
-	"github.com/edsjcbra/REST-API_Go_Portfolio/src/model"
-	"github.com/edsjcbra/REST-API_Go_Portfolio/src/model/repository/entity/converter"
+	"github.com/edsjcbra/REST-API_Go_Portfolio/src/models"
+	"github.com/edsjcbra/REST-API_Go_Portfolio/src/repositories/converter"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
 var (
 	MONGODB_USER_COLLECTION = "MONGODB_USER_COLLECTION"
 )
 
-func (ur *userRepository) CreateUser(user model.UserGetter) (model.UserGetter, *rest_err.RestErr) {
+func (ur *userRepository) CreateUser(user models.UserModel) (models.UserModel, *rest_err.RestErr) {
 	logger.Info("Init createUser repository")
 
 	collectionName := os.Getenv(MONGODB_USER_COLLECTION)
@@ -38,9 +37,6 @@ func (ur *userRepository) CreateUser(user model.UserGetter) (model.UserGetter, *
 	switch v := result.InsertedID.(type) {
 	case primitive.ObjectID:
 		userToDb.ID = v
-	case bson.ObjectID:
-		// Convert from bson.ObjectID to primitive.ObjectID
-		userToDb.ID = primitive.ObjectID(v)
 	default:
 		return nil, rest_err.NewInternalServerError("Erro ao converter ID: tipo inesperado")
 	}

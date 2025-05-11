@@ -1,7 +1,7 @@
-package controller
+package controllers
 
 import (
-	"github.com/edsjcbra/REST-API_Go_Portfolio/src/model/service"
+	"github.com/edsjcbra/REST-API_Go_Portfolio/src/services"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,10 +15,10 @@ type UserController interface {
 }
 
 type userController struct {
-	service service.UserService
+	service services.UserService
 }
 
-func NewUserController(userService service.UserService) UserController{
+func NewUserController(userService services.UserService) UserController{
 	return &userController{
 		service: userService,
 	}

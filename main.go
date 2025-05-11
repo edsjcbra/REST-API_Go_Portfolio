@@ -4,12 +4,12 @@ import (
 	"context"
 	"log"
 
-	"github.com/edsjcbra/REST-API_Go_Portfolio/src/configuration/database/mongoDb"
 	"github.com/edsjcbra/REST-API_Go_Portfolio/src/configuration/logger"
-	"github.com/edsjcbra/REST-API_Go_Portfolio/src/controller"
-	"github.com/edsjcbra/REST-API_Go_Portfolio/src/controller/routes"
-	"github.com/edsjcbra/REST-API_Go_Portfolio/src/model/repository"
-	"github.com/edsjcbra/REST-API_Go_Portfolio/src/model/service"
+	"github.com/edsjcbra/REST-API_Go_Portfolio/src/controllers"
+	"github.com/edsjcbra/REST-API_Go_Portfolio/src/databases/mongoDb"
+	"github.com/edsjcbra/REST-API_Go_Portfolio/src/repositories"
+	"github.com/edsjcbra/REST-API_Go_Portfolio/src/routes"
+	"github.com/edsjcbra/REST-API_Go_Portfolio/src/services"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -18,7 +18,7 @@ import (
 func main() {
 
 	logger.Info("Application started")
-	
+
 	//LOAD .env VARIABLES
 	err := godotenv.Load()
 	if err != nil {
@@ -26,20 +26,20 @@ func main() {
 	}
 	//INIT DB
 	database, err := mongoDb.NewMongoDbConnection(context.Background())
-	if err != nil{
+	if err != nil {
 		log.Fatalf("Error connecting to database, error=%s\n", err.Error())
-	} 
+	}
 
 	//DEPENDENCIES
-	repo := repository.NewUserRepository(database)
-	service := service.NewUserService(repo)
-	userController := controller.NewUserController(service)
+	repo := repositories.NewUserRepository(database)
+	service := services.NewUserService(repo)
+	userController := controllers.NewUserController(service)
 
 	r := gin.Default()
 
 	routes.InitRoutes(&r.RouterGroup, userController)
 
-	if err := r.Run(":8080"); err != nil{
+	if err := r.Run(":8080"); err != nil {
 		log.Fatal(err)
 	}
 }

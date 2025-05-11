@@ -1,4 +1,4 @@
-package model
+package models
 
 import (
 	"crypto/md5"
@@ -13,7 +13,7 @@ type user struct {
 	age      int8
 }
 
-type UserGetter interface {
+type UserModel interface {
 	GetID() string
 	GetEmail() string
 	GetPassword() string
@@ -24,7 +24,7 @@ type UserGetter interface {
 	SetID(string)
 }
 
-func NewUser(email, password, name string, age int8) UserGetter {
+func NewUser(email, password, name string, age int8) UserModel {
 	return &user{
 		email:    email,
 		password: password,

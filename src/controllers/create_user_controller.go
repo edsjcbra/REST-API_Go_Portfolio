@@ -1,20 +1,19 @@
-package controller
+package controllers
 
 import (
 	"net/http"
 
 	"github.com/edsjcbra/REST-API_Go_Portfolio/src/configuration/logger"
-	"github.com/edsjcbra/REST-API_Go_Portfolio/src/configuration/rest_err"
 	"github.com/edsjcbra/REST-API_Go_Portfolio/src/configuration/validation"
-	"github.com/edsjcbra/REST-API_Go_Portfolio/src/controller/model/request"
-	"github.com/edsjcbra/REST-API_Go_Portfolio/src/model"
-	"github.com/edsjcbra/REST-API_Go_Portfolio/src/view"
+	"github.com/edsjcbra/REST-API_Go_Portfolio/src/controllers/rest_models/request"
+	"github.com/edsjcbra/REST-API_Go_Portfolio/src/models"
+	"github.com/edsjcbra/REST-API_Go_Portfolio/src/views"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
 
 var (
-	UserDomainInterface model.UserGetter
+	UserDomainInterface models.UserModel
 )
 
 func (uc *userController) CreateUser(c *gin.Context) {
@@ -30,7 +29,7 @@ func (uc *userController) CreateUser(c *gin.Context) {
 		return
 	}
 
-	domainUser := model.NewUser(userFromRequest.Email, userFromRequest.Password, userFromRequest.Name, userFromRequest.Age)
+	domainUser := models.NewUser(userFromRequest.Email, userFromRequest.Password, userFromRequest.Name, userFromRequest.Age)
 
 	userResult, err := uc.service.CreateUser(domainUser)
 	if err != nil {
@@ -39,12 +38,5 @@ func (uc *userController) CreateUser(c *gin.Context) {
 		return
 	}
 
-	// Aqui garantimos que userResult não está nil antes de acessar
-	if userResult == nil {
-		apiErr := rest_err.NewInternalServerError("Erro inesperado ao criar usuário")
-		c.JSON(apiErr.Code, apiErr)
-		return
-	}
-
-	c.JSON(http.StatusCreated, view.ConvertUserToResponse(userResult))
+	c.JSON(http.StatusCreated, views.ConvertUserToResponse(userResult))
 }
